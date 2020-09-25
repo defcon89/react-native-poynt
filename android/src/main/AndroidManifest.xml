@@ -16,18 +16,9 @@
     <uses-permission android:name="com.poynt.store.BILLING" />
     <uses-permission android:name="poynt.permission.ACCESSORY_MANAGER" />
     <uses-permission android:name="co.poynt.receipts.ACCESS_RECEIPT_SETTINGS" />
-
-    <!-- Poynt Service Permissions -->
-    <uses-permission android:name="poynt.permission.BUSINESS_SERVICE" />
-    <!-- Permissions needed by the Payment Fragments -->
-    <uses-permission android:name="poynt.permission.TRANSACTION_SERVICE" />
-    <uses-permission android:name="poynt.permission.SECOND_SCREEN_SERVICE" />
     <uses-permission android:name="poynt.permission.CASH_REGISTER_SERVICE" />
-    <uses-permission android:name="poynt.permission.RECEIPT_PRINTING_SERVICE" />
     <uses-permission android:name="poynt.permission.EMAIL_SERVICE" />
-    <uses-permission android:name="poynt.permission.CUSTOMER_SERVICE" />
     <uses-permission android:name="poynt.permission.OFFLINE_SERVICE" />
-    <!-- /Permissions needed by the Payment Fragments -->
 
     <application>
         <receiver
