@@ -31,6 +31,9 @@ buildscript {
         repositories {
             google()
             jcenter()
+            maven {
+                url 'https://nexus.poynt.com/content/repositories/releases'
+            }
         }
         dependencies {
             classpath 'com.android.tools.build:gradle:3.4.1'
