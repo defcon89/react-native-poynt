@@ -1,0 +1,45 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.reactlibrary">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="co.poynt.orders.ACCESS_ORDERS" />
+    <uses-permission android:name="poynt.permission.ORDER_SERVICE" />
+    <uses-permission android:name="poynt.permission.TRANSACTION_SERVICE" />
+    <uses-permission android:name="poynt.permission.CUSTOMER_SERVICE" />
+    <uses-permission android:name="poynt.permission.PRODUCT_SERVICE" />
+    <uses-permission android:name="poynt.permission.SECOND_SCREEN_SERVICE" />
+    <uses-permission android:name="poynt.permission.RECEIPT_PRINTING_SERVICE" />
+    <uses-permission android:name="poynt.permission.BUSINESS_SERVICE" />
+    <uses-permission android:name="com.poynt.store.BILLING" />
+    <uses-permission android:name="poynt.permission.ACCESSORY_MANAGER" />
+    <uses-permission android:name="co.poynt.receipts.ACCESS_RECEIPT_SETTINGS" />
+
+    <!-- Poynt Service Permissions -->
+    <uses-permission android:name="poynt.permission.BUSINESS_SERVICE" />
+    <!-- Permissions needed by the Payment Fragments -->
+    <uses-permission android:name="poynt.permission.TRANSACTION_SERVICE" />
+    <uses-permission android:name="poynt.permission.SECOND_SCREEN_SERVICE" />
+    <uses-permission android:name="poynt.permission.CASH_REGISTER_SERVICE" />
+    <uses-permission android:name="poynt.permission.RECEIPT_PRINTING_SERVICE" />
+    <uses-permission android:name="poynt.permission.EMAIL_SERVICE" />
+    <uses-permission android:name="poynt.permission.CUSTOMER_SERVICE" />
+    <uses-permission android:name="poynt.permission.OFFLINE_SERVICE" />
+    <!-- /Permissions needed by the Payment Fragments -->
+
+    <application>
+        <receiver
+            android:name=".receivers.TransactionReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="poynt.intent.action.PAYMENT_CANCELED" />
+                <action android:name="poynt.intent.action.TRANSACTION_COMPLETED" />
+                <action android:name="poynt.intent.action.SECOND_SCREEN_BUSY" />
+                <action android:name="poynt.intent.action.SECOND_SCREEN_IDLE" />
+            </intent-filter>
+        </receiver>
+    </application>
+</manifest>
