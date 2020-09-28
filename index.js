@@ -1,75 +1,71 @@
-import { NativeModules, DeviceEventEmitter, Platform } from "react-native";
+import { NativeModules, NativeEventEmitter, Platform } from "react-native";
 
-const { Poynt } = NativeModules;
+const PoyntSDK = NativeModules.Poynt;
+const EventEmitter = new NativeEventEmitter(PoyntSDK);
 
-let paymentCompleted;
-let paymentAuthorized;
-let paymentCanceled;
-let paymentFailed;
-let paymentRefunded;
-let paymentVoided;
-let printDone;
+class Poynt {
+  paymentCallback = undefined;
+  printCallback = undefined;
 
-const onPaymentCompleted = (callback) => {
-  paymentCompleted = DeviceEventEmitter.addListener(
-    "paymentCompleted",
-    callback
-  );
-};
+  constructor() {
+    EventEmitter.addListener("paymentCompleted", this.onPaymentCompleted);
+    EventEmitter.addListener("paymentAuthorized", this.onPaymentAuthorized);
+    EventEmitter.addListener("paymentCanceled", this.onPaymentCanceled);
+    EventEmitter.addListener("paymentFailed", this.onPaymentFailed);
+    EventEmitter.addListener("paymentRefunded", this.onPaymentRefunded);
+    EventEmitter.addListener("paymentVoided", this.onPaymentVoided);
+    EventEmitter.addListener("printDone", this.onPrintDone);
+    PoyntSDK.init(undefined);
+  }
 
-const onPaymentAuthorized = (callback) => {
-  paymentAuthorized = DeviceEventEmitter.addListener(
-    "paymentAuthorized",
-    callback
-  );
-};
+  onPaymentCompleted = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(true, callback);
+  };
 
-const onPaymentCanceled = (callback) => {
-  paymentCanceled = DeviceEventEmitter.addListener("paymentCanceled", callback);
-};
+  onPaymentAuthorized = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(true, callback);
+  };
 
-const onPaymentFailed = (callback) => {
-  paymentFailed = DeviceEventEmitter.addListener("paymentFailed", callback);
-};
+  onPaymentCanceled = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(false, callback);
+  };
 
-const onPaymentRefunded = (callback) => {
-  paymentRefunded = DeviceEventEmitter.addListener("paymentRefunded", callback);
-};
+  onPaymentFailed = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(false, callback);
+  };
 
-const onPaymentVoided = (callback) => {
-  paymentVoided = DeviceEventEmitter.addListener("paymentVoided", callback);
-};
+  onPaymentRefunded = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(true, callback);
+  };
 
-const onPrintDone = (callback) => {
-  printDone = DeviceEventEmitter.addListener("printDone", callback);
-};
+  onPaymentVoided = (callback) => {
+    if (!this.paymentCallback) return;
+    this.paymentCallback(true, callback);
+  };
 
-const init = (callback) => {
-  Poynt.init(callback);
-};
+  onPrintDone = (callback) => {
+    if (!this.printCallback) return;
+    this.printCallback(callback);
+  };
 
-const print = (image, callback) => {
-  Poynt.print(image, callback);
-};
+  init = (callback) => {
+    PoyntSDK.init(callback);
+  };
 
-const pay = (amount, currency, callback) => {
-  Poynt.pay(amount, currency);
-};
+  print = (image, callback) => {
+    this.printCallback = callback;
+    PoyntSDK.print(image, undefined);
+  };
 
-if (Platform.OS === "android") {
-  Poynt.init();
+  pay = (amount, currency, callback) => {
+    this.paymentCallback = callback;
+    PoyntSDK.pay(amount, currency);
+  };
 }
 
-export default {
-  onPaymentCompleted,
-  onPaymentAuthorized,
-  onPaymentCanceled,
-  onPaymentFailed,
-  onPaymentRefunded,
-  onPaymentVoided,
-  onPrintDone,
-  print,
-  pay,
-};
-
-export default Poynt;
+export default new Poynt();

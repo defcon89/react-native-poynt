@@ -142,6 +142,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
 
     @Override
     public void onHostResume() {
+        if (this.printerServiceHelper == null) return;
         this.printerServiceHelper.bindAccessoryManager();
     }
 
@@ -152,6 +153,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
 
     @Override
     public void onHostDestroy() {
+        if (this.printerServiceHelper == null) return;
         this.printerServiceHelper.unBindServices();
         this.printerServiceHelper.unBindPrinters();
     }

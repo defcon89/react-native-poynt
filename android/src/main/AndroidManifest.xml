@@ -24,7 +24,7 @@
         <receiver
             android:name=".receivers.TransactionReceiver"
             android:enabled="true"
-            android:exported="true">
+            android:exported="false">
             <intent-filter>
                 <action android:name="poynt.intent.action.PAYMENT_CANCELED" />
                 <action android:name="poynt.intent.action.TRANSACTION_COMPLETED" />
