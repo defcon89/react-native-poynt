@@ -17,8 +17,7 @@ class Poynt {
     EventEmitter.addListener("printDone", this._onPrintDone);
 
     this.isPoyntTerminal().then((enabled) => {
-      if (!enabled) return;
-      PoyntSDK.init(undefined);
+      if (enabled) PoyntSDK.init(undefined);
     });
   }
 
@@ -72,8 +71,7 @@ class Poynt {
   };
 
   isPoyntTerminal = async () => {
-    let result = await PoyntSDK.isPoyntTerminal();
-    return result;
+    return await PoyntSDK.isPoyntTerminal();
   };
 }
 
