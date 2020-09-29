@@ -82,8 +82,8 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
     // Poynt SDK and Model Dependencies
-    implementation 'co.poynt.api:android-api-model:1.2.125@jar'
-    implementation 'co.poynt.android.sdk:poynt-sdk:1.2.34@aar'
+    implementation 'co.poynt.api:android-api-model:1.2.138@jar'
+    implementation 'co.poynt.android.sdk:poynt-sdk:1.2.42@aar'
 }
 
 def configureReactNativePom(def pom) {

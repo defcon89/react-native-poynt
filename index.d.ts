@@ -17,6 +17,9 @@ declare class Poynt {
     currency: string,
     callback?: (success: boolean, result: any) => void
   ): Promise<boolean>;
+
+  // isPoyntTerminal
+  static async isPoyntTerminal(): Promise<boolean>;
 }
 
 export default Poynt;

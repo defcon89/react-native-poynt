@@ -8,47 +8,51 @@ class Poynt {
   printCallback = undefined;
 
   constructor() {
-    EventEmitter.addListener("paymentCompleted", this.onPaymentCompleted);
-    EventEmitter.addListener("paymentAuthorized", this.onPaymentAuthorized);
-    EventEmitter.addListener("paymentCanceled", this.onPaymentCanceled);
-    EventEmitter.addListener("paymentFailed", this.onPaymentFailed);
-    EventEmitter.addListener("paymentRefunded", this.onPaymentRefunded);
-    EventEmitter.addListener("paymentVoided", this.onPaymentVoided);
-    EventEmitter.addListener("printDone", this.onPrintDone);
-    PoyntSDK.init(undefined);
+    EventEmitter.addListener("paymentCompleted", this._onPaymentCompleted);
+    EventEmitter.addListener("paymentAuthorized", this._onPaymentAuthorized);
+    EventEmitter.addListener("paymentCanceled", this._onPaymentCanceled);
+    EventEmitter.addListener("paymentFailed", this._onPaymentFailed);
+    EventEmitter.addListener("paymentRefunded", this._onPaymentRefunded);
+    EventEmitter.addListener("paymentVoided", this._onPaymentVoided);
+    EventEmitter.addListener("printDone", this._onPrintDone);
+
+    isPoyntTerminal().then((enabled) => {
+      if (!enabled) return;
+      PoyntSDK.init(undefined);
+    });
   }
 
-  onPaymentCompleted = (callback) => {
+  _onPaymentCompleted = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(true, callback);
   };
 
-  onPaymentAuthorized = (callback) => {
+  _onPaymentAuthorized = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(true, callback);
   };
 
-  onPaymentCanceled = (callback) => {
+  _onPaymentCanceled = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(false, callback);
   };
 
-  onPaymentFailed = (callback) => {
+  _onPaymentFailed = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(false, callback);
   };
 
-  onPaymentRefunded = (callback) => {
+  _onPaymentRefunded = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(true, callback);
   };
 
-  onPaymentVoided = (callback) => {
+  _onPaymentVoided = (callback) => {
     if (!this.paymentCallback) return;
     this.paymentCallback(true, callback);
   };
 
-  onPrintDone = (callback) => {
+  _onPrintDone = (callback) => {
     if (!this.printCallback) return;
     this.printCallback(callback);
   };
@@ -65,6 +69,11 @@ class Poynt {
   pay = (amount, currency, callback) => {
     this.paymentCallback = callback;
     PoyntSDK.pay(amount, currency);
+  };
+
+  isPoyntTerminal = async () => {
+    let result = await PoyntSDK.isPoyntTerminal();
+    return result;
   };
 }
 

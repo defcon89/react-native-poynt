@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -75,6 +76,15 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
         });
         printerServiceHelper.bindAccessoryManager();
     }
+
+    /**
+     * @return true is the app is running on a Poynt terminal and has a card reader
+     */
+    @ReactMethod
+    private void isPoyntTerminal(Callback callback) {
+        callback.invoke("POYNT".equals(Build.MANUFACTURER));
+    }
+
 
     @ReactMethod
     public void print(String filePath, Callback callback) {
