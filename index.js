@@ -16,7 +16,7 @@ class Poynt {
     EventEmitter.addListener("paymentVoided", this._onPaymentVoided);
     EventEmitter.addListener("printDone", this._onPrintDone);
 
-    isPoyntTerminal().then((enabled) => {
+    this.isPoyntTerminal().then((enabled) => {
       if (!enabled) return;
       PoyntSDK.init(undefined);
     });
