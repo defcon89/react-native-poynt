@@ -65,6 +65,16 @@ class Poynt {
     PoyntSDK.print(image, undefined);
   };
 
+  printVoucher = (domain_text,user_text,booking_string,hidePrice,callback) => {
+    this.printCallback = callback;
+    PoyntSDK.printVoucher(domain_text,user_text,booking_string,hidePrice,callback);
+  };
+
+  printSingleVoucher = (domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,callback) => {
+    this.printCallback = callback;
+    PoyntSDK.printSingleVoucher(domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,callback);
+  };
+
   pay = (amount, currency, callback) => {
     this.paymentCallback = callback;
     PoyntSDK.pay(amount, currency);

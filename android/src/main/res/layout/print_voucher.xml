@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screen"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFF"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="290dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="200dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/agent"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/agent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="35"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/voucher_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    tools:text="23/08/2020" />
+
+                <TextView
+                    android:id="@+id/voucher_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    tools:text="10:30" />
+
+                <TextView
+                    android:id="@+id/booking_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    tools:text="1312312" />
+
+                <TextView
+                    android:id="@+id/paxes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAllCaps="true"
+                    android:textColor="#000"
+                    android:textStyle="bold"
+                    tools:text="1 x ADT\n2 x SNR\n1 x CHD\n1 x INF" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/qrcode"
+                android:layout_width="0dp"
+                android:layout_height="200dp"
+                android:layout_gravity="right"
+                android:layout_weight="65" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/pckg_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="1245" />
+
+        <TextView
+            android:id="@+id/package_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            tools:text="Como and Bellagio - Full day Trip" />
+
+        <TextView
+            android:id="@+id/travel_point"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="Milano, Largo Cairoli 18 (Milan Visitor Center)" />
+
+        <TextView
+            android:id="@+id/travel_date_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="10:00" />
+
+
+        <LinearLayout
+            android:id="@+id/return_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/travel_return_point"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="Milano, Largo Cairoli 18 (Milan Visitor Center)" />
+
+            <TextView
+                android:id="@+id/travel_return_date_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+                android:textColor="#000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                tools:text="10:00" />
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="end"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:text="18.00€" />
+
+        <TextView
+            android:id="@+id/business_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textStyle="bold"
+            tools:text="The Orange Seed srl, Via Pastrengo 6, Milano (MI) 20159, P.iva 10768020967" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

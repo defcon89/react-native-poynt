@@ -84,6 +84,10 @@ dependencies {
     // Poynt SDK and Model Dependencies
     implementation 'co.poynt.api:android-api-model:1.2.138@jar'
     implementation 'co.poynt.android.sdk:poynt-sdk:1.2.42@aar'
+
+    //Add Zxing library to generate barcode
+    implementation('com.journeyapps:zxing-android-embedded:4.1.0') { transitive = false }
+    implementation 'com.google.zxing:core:3.3.3'
 }
 
 def configureReactNativePom(def pom) {

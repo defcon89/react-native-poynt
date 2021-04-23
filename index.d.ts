@@ -11,6 +11,27 @@ declare class Poynt {
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 
+  // Print Voucher
+  static printVoucher(
+    domain_text: string,
+    user_text: string,
+    booking_string:string,
+    hidePrice:boolean, 
+    callback?: (success: boolean) => void
+  ): Promise<boolean>;
+
+  // Print Single Voucher
+  static printSingleVoucher(
+    domain_text:string, 
+    user_text:string, 
+    tripBooking_text:string,
+    pkg_text:string, 
+    booking_preview_text:string, 
+    tripBookingParticipant_text:string, 
+    ticket_text:string,
+    callback?: (success: boolean) => void
+  ): Promise<boolean>;
+
   // Pay
   static pay(
     amount: number,

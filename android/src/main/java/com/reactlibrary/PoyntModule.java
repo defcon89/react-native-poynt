@@ -86,6 +86,28 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     promise.resolve("POYNT".equals(Build.MANUFACTURER));
   }
 
+  @ReactMethod
+  private void printVoucher(String domain_text, String user_text, String booking_string, boolean hidePrice, Callback callback){
+    if (printerServiceHelper == null) {
+      showToast("MAKE INIT BEFORE PRINT");
+      return;
+    }
+
+    Bitmap ticket = PrinterHelper.createVoucher(this.reactContext, domain_text, user_text, booking_string, hidePrice);
+    printBitmap(ticket, callback);
+  }
+
+  @ReactMethod
+  private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, Callback callback){
+    if (printerServiceHelper == null) {
+      showToast("MAKE INIT BEFORE PRINT");
+      return;
+    }
+
+    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, tripBooking_text, pkg_text, booking_preview_text, tripBookingParticipant_text, ticket_text);
+    printBitmap(ticket, callback);
+  }
+
 
   @ReactMethod
   public void print(String filePath, Callback callback) {
@@ -95,47 +117,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     }
 
     Bitmap bmp = BitmapFactory.decodeFile(filePath);
-    if (bmp == null) {
-      callback.invoke(false);
-      return;
-    }
-
-    Bundle data = new Bundle();
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-    byte[] byteArray = stream.toByteArray();
-    bmp.recycle();
-
-    HashMap<AccessoryProvider, IBinder> printers = printerServiceHelper.getPrinters();
-    for (AccessoryProvider printer : printers.keySet()) {
-      if (printer.isConnected()) {
-        final IPoyntPrinterService printerService = IPoyntPrinterService.Stub.asInterface(printers.get(printer));
-        showToast("PRINTER CONNECTED");
-        if (printerService != null) {
-          Log.e("PRINTER", "SERVICE CONNECTED");
-          if (byteArray == null) return;
-          Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-          showToast("VOUCHER CREATED");
-          Log.e("PRINTER", "BITMAP CREATED");
-          try {
-            printerService.printJob(UUID.randomUUID().toString(), bitmap, printerServiceHelper.printerServiceListener);
-            showToast("PRINTING");
-            sendEvent("printDone", true);
-            if (callback != null) callback.invoke(true);
-          } catch (RemoteException e) {
-            e.printStackTrace();
-          }
-        } else {
-          if (callback != null) callback.invoke(false);
-          showToast("SERVICE NOT CONNECTED");
-        }
-      } else {
-        Log.e("PRINTER", "NOT CONNECTED");
-        if (callback != null) callback.invoke(false);
-        showToast("PRINTER NOT CONNECTED");
-        printerServiceHelper.reconnectPrinter(printer);
-      }
-    }
+    printBitmap(bmp, callback);
   }
 
   @ReactMethod
@@ -213,6 +195,51 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   //////////////////////////////////
   // LOCAL PRIVATE METHODS
   //////////////////////////////////
+  // print bitmap
+  private void printBitmap(Bitmap bmp, Callback callback){
+    if (bmp == null) {
+      callback.invoke(false);
+      return;
+    }
+
+    Bundle data = new Bundle();
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+    byte[] byteArray = stream.toByteArray();
+    bmp.recycle();
+
+    HashMap<AccessoryProvider, IBinder> printers = printerServiceHelper.getPrinters();
+    for (AccessoryProvider printer : printers.keySet()) {
+      if (printer.isConnected()) {
+        final IPoyntPrinterService printerService = IPoyntPrinterService.Stub.asInterface(printers.get(printer));
+        showToast("PRINTER CONNECTED");
+        if (printerService != null) {
+          Log.e("PRINTER", "SERVICE CONNECTED");
+          if (byteArray == null) return;
+          Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+          showToast("VOUCHER CREATED");
+          Log.e("PRINTER", "BITMAP CREATED");
+          try {
+            printerService.printJob(UUID.randomUUID().toString(), bitmap, printerServiceHelper.printerServiceListener);
+            showToast("PRINTING");
+            sendEvent("printDone", true);
+            if (callback != null) callback.invoke(true);
+          } catch (RemoteException e) {
+            e.printStackTrace();
+          }
+        } else {
+          if (callback != null) callback.invoke(false);
+          showToast("SERVICE NOT CONNECTED");
+        }
+      } else {
+        Log.e("PRINTER", "NOT CONNECTED");
+        if (callback != null) callback.invoke(false);
+        showToast("PRINTER NOT CONNECTED");
+        printerServiceHelper.reconnectPrinter(printer);
+      }
+    }
+  }
+
   // sends an event to javascript Realm (Object data)
   private void sendEvent(String eventName,
                          @Nullable WritableMap params) {
