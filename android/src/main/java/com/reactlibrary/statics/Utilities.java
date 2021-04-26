@@ -19,7 +19,6 @@ import android.widget.RelativeLayout;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
-import com.squareup.okhttp.MediaType;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -159,6 +158,4 @@ final public class Utilities {
         BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
         return barcodeEncoder.encodeBitmap(text, BarcodeFormat.QR_CODE, width, height);
     }
-
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 }
