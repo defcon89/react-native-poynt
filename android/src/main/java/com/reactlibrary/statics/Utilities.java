@@ -16,11 +16,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.InetAddress;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,6 +57,48 @@ final public class Utilities {
 
     public static boolean isHtmlText(String text) {
         return text != null && !(!text.contains("html>") || !text.contains("</html>"));
+    }
+
+    static public Gson getGson() {
+        GsonBuilder builder = new GsonBuilder();
+
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        Gson gson = builder
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                .registerTypeAdapter(Date.class, new JsonDateDeserializer())
+                .registerTypeAdapter(String.class, new JsonStringDeserializer())
+                .create();
+        return gson;
+    }
+
+    static private class JsonDateDeserializer implements JsonDeserializer<Date> {
+        public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            String s = json.getAsJsonPrimitive().getAsString();
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ITALIAN);
+            Date d;
+            try {
+                d = df.parse(s);
+            } catch (ParseException e) {
+                try {
+                    DateFormat df2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALIAN);
+                    d = df2.parse(s);
+                } catch (ParseException e2) {
+                    Log.e(TAG, "", e);
+                    d = new Date();
+                }
+            }
+            return d;
+        }
+    }
+
+    static private class JsonStringDeserializer implements JsonDeserializer<String> {
+        public String deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            try {
+                return json.getAsString();
+            } catch (Exception e) {
+                return json.toString();
+            }
+        }
     }
 
     public static String getVisualDateTextFromJson(String jsonDate, String format) {

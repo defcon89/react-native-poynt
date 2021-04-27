@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
 import co.poynt.api.model.Order;
 
 import static com.reactlibrary.statics.Utilities.createQRCodeFromString;
+import static com.reactlibrary.statics.Utilities.getGson;
 
 public class PrinterHelper {
 
@@ -62,7 +63,7 @@ public class PrinterHelper {
         RelativeLayout frameLayout = inflatedFrame.findViewById(R.id.screen);
         ImageView qrCode = frameLayout.findViewById(R.id.qrcode);
 
-        Gson gson = new Gson();
+        Gson gson = getGson();
         BookingDetailResponse booking = gson.fromJson(booking_string, BookingDetailResponse.class);
 
         TextView agent = frameLayout.findViewById(R.id.agent);
@@ -183,7 +184,7 @@ public class PrinterHelper {
     }
 
     public static Bitmap createVoucherSingle(ReactApplicationContext context, String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text) {
-        Gson gson = new Gson();
+        Gson gson = getGson();
         BookingResponse.TripBooking tripBooking = gson.fromJson(tripBooking_text, BookingResponse.TripBooking.class);
         TripPackagesResponse pkg = gson.fromJson(pkg_text, TripPackagesResponse.class);
         BookingPreviewResponse booking_preview = gson.fromJson(booking_preview_text, BookingPreviewResponse.class);
