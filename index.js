@@ -17,7 +17,7 @@ class Poynt {
     EventEmitter.addListener("printDone", this._onPrintDone);
 
     this.isPoyntTerminal().then((enabled) => {
-      if (enabled) PoyntSDK.init(undefined);
+      if (enabled) PoyntSDK.init(() => {});
     });
   }
 
@@ -62,7 +62,7 @@ class Poynt {
 
   print = (image, callback) => {
     this.printCallback = callback;
-    PoyntSDK.print(image, undefined);
+    PoyntSDK.print(image, callback);
   };
 
   printVoucher = (domain_text,user_text,booking_string,hidePrice,callback) => {

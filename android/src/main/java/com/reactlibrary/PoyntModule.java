@@ -90,6 +90,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   private void printVoucher(String domain_text, String user_text, String booking_string, boolean hidePrice, Callback callback){
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
+      callback.invoke(false);
       return;
     }
 
@@ -101,6 +102,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, Callback callback){
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
+      callback.invoke(false);
       return;
     }
 
@@ -113,6 +115,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   public void print(String filePath, Callback callback) {
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
+      callback.invoke(false);
       return;
     }
 
