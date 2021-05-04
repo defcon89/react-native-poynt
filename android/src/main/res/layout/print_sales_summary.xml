@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:text="@string/sales_summary"
+        android:text="Riepilogo Vendite"
         android:textColor="#000"
         android:textSize="22sp"
         android:textStyle="bold" />
@@ -45,7 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="50"
-            android:text="@string/total"
+            android:text="Totale:"
             android:textColor="#000"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/cash"
+                android:text="Contanti"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -105,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="@string/credit_debit_card"
+                android:text="Carta di credito/debito"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -142,7 +142,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/printed_voucher"
+                android:text="Biglietti stampati:"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -171,7 +171,7 @@
                 android:gravity="end"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/canceled_voucher"
+                android:text="Biglietti cancellati:"
                 android:textColor="#000"
                 android:textSize="15sp"
                 android:textStyle="bold" />
