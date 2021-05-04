@@ -165,9 +165,13 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     this.printerServiceHelper.unBindPrinters();
   }
 
+  @Override
+  public void onNewIntent(Intent intent) {
+
+  }
 
   @Override
-  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
     Gson gson = new Gson();
 
     // Check which request we're responding to
