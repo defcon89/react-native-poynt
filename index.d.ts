@@ -32,6 +32,12 @@ declare class Poynt {
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 
+  //Print Sales Summary
+  static printSalesSummary(
+    tripBookingsReport_text: string,
+    callback?: (success: boolean) => void
+  ): Promise<boolean>;
+
   // Pay
   static pay(
     amount: number,

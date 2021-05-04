@@ -75,6 +75,11 @@ class Poynt {
     PoyntSDK.printSingleVoucher(domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,callback);
   };
 
+  printSalesSummary = (tripBookingsReport_text, callback) => {
+    this.printCallback = callback;
+    PoyntSDK.printSalesSummary(tripBookingsReport_text, callback);
+  }
+
   pay = (amount, currency, callback) => {
     this.paymentCallback = callback;
     PoyntSDK.pay(amount, currency);

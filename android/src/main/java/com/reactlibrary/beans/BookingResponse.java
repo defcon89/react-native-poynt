@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 
 public class BookingResponse {
 
@@ -350,7 +352,6 @@ public class BookingResponse {
 
         
         public static class ParticipantCountersBean {
-
             private int total;
             private int SNR;
             private int ADT;
@@ -400,7 +401,95 @@ public class BookingResponse {
 
         
         public static class TripBookingPropertiesBean {
+            public @Nullable OriginChannelExtra getOrigin_channel_extra() {
+                return origin_channel_extra;
+            }
 
+            public void setOrigin_channel_extra(@Nullable OriginChannelExtra origin_channel_extra) {
+                this.origin_channel_extra = origin_channel_extra;
+            }
+
+            @Nullable
+            private OriginChannelExtra origin_channel_extra;
+
+            public static class OriginChannelExtra {
+                public String getProperty_definition_id() {
+                    return property_definition_id;
+                }
+
+                public void setProperty_definition_id(String property_definition_id) {
+                    this.property_definition_id = property_definition_id;
+                }
+
+                public String getName() {
+                    return name;
+                }
+
+                public void setName(String name) {
+                    this.name = name;
+                }
+
+                public String getType() {
+                    return type;
+                }
+
+                public void setType(String type) {
+                    this.type = type;
+                }
+
+                private String property_definition_id;
+                private String name;
+                private String type;
+
+                public Value getValue() {
+                    return value;
+                }
+
+                public void setValue(Value value) {
+                    this.value = value;
+                }
+
+                private Value value;
+
+                public static class Value {
+                    public String getTransaction_id() {
+                        return transaction_id;
+                    }
+
+                    public void setTransaction_id(String transaction_id) {
+                        this.transaction_id = transaction_id;
+                    }
+
+                    public String getPayment_method() {
+                        return payment_method;
+                    }
+
+                    public void setPayment_method(String payment_method) {
+                        this.payment_method = payment_method;
+                    }
+
+                    public String getPayment_method_title() {
+                        return payment_method_title;
+                    }
+
+                    public void setPayment_method_title(String payment_method_title) {
+                        this.payment_method_title = payment_method_title;
+                    }
+
+                    public Date getDate_paid() {
+                        return date_paid;
+                    }
+
+                    public void setDate_paid(Date date_paid) {
+                        this.date_paid = date_paid;
+                    }
+
+                    private String transaction_id;
+                    private String payment_method;
+                    private String payment_method_title;
+                    private Date date_paid;
+                }
+            }
         }
 
         @SuppressWarnings("unused")

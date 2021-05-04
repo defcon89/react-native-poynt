@@ -110,6 +110,17 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     printBitmap(ticket, callback);
   }
 
+  @ReactMethod
+  private void printSalesSummary(String tripBookingsReport_text, Callback callback){
+    if (printerServiceHelper == null) {
+      showToast("MAKE INIT BEFORE PRINT");
+      callback.invoke(false);
+      return;
+    }
+
+    Bitmap summary = PrinterHelper.createSalesSummaryTicket(this.reactContext, tripBookingsReport_text);
+    printBitmap(summary, callback);
+  }
 
   @ReactMethod
   public void print(String filePath, Callback callback) {
@@ -156,7 +167,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
 
 
   @Override
-  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
     Gson gson = new Gson();
 
     // Check which request we're responding to
@@ -188,11 +199,6 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
         sendEvent("paymentCanceled", true);
       }
     }
-  }
-
-  @Override
-  public void onNewIntent(Intent intent) {
-
   }
 
   //////////////////////////////////
@@ -275,4 +281,6 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
       }
     });
   }
+
+
 }

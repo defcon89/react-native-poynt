@@ -2,6 +2,7 @@ package com.reactlibrary;
 
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -20,6 +22,7 @@ import com.reactlibrary.beans.BookingDetailResponse;
 import com.reactlibrary.beans.BookingPreviewResponse;
 import com.reactlibrary.beans.BookingResponse;
 import com.reactlibrary.beans.DomainInfoResponse;
+import com.reactlibrary.beans.TripBookingReport;
 import com.reactlibrary.beans.TripPackagesResponse;
 import com.reactlibrary.beans.UserResponse;
 import com.reactlibrary.statics.Utilities;
@@ -29,6 +32,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import javax.annotation.Nullable;
@@ -67,7 +71,6 @@ public class PrinterHelper {
         BookingDetailResponse booking = gson.fromJson(booking_string, BookingDetailResponse.class);
 
         TextView agent = frameLayout.findViewById(R.id.agent);
-
         UserResponse userResponse = gson.fromJson(user_text, UserResponse.class);
         agent.setText(userResponse.getUser().getAccess_id() + " " + userResponse.getUser().getName());
 
@@ -291,6 +294,129 @@ public class PrinterHelper {
         frameLayout.layout(0, 0, frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight());
         frameLayout.buildDrawingCache(true);
         return frameLayout.getDrawingCache();
+    }
+
+    public static Bitmap createSalesSummaryTicket(ReactApplicationContext context, String tripBookingsReport_text) {
+        double totalPrice = 0.0;
+        double cashPrice = 0.0;
+        double ccPrice = 0.0;
+        int cancelled_vouchers = 0;
+        int printed_vouchers = 0;
+
+        Gson gson = getGson();
+        List<TripBookingReport> tripBookings = gson.fromJson(tripBookingsReport_text, new TypeToken<List<TripBookingReport>>(){}.getType());
+        View inflatedFrame = LayoutInflater.from(context).inflate(R.layout.print_sales_summary, null);
+
+        TextView timestamp = inflatedFrame.findViewById(R.id.timestamp);
+        LinearLayout container = inflatedFrame.findViewById(R.id.sales_container);
+        TextView totalSales = inflatedFrame.findViewById(R.id.total_sales);
+        TextView cashSales = inflatedFrame.findViewById(R.id.cash_sales);
+        TextView ccSales = inflatedFrame.findViewById(R.id.cc_sales);
+        TextView canceledOrders = inflatedFrame.findViewById(R.id.canceled_orders);
+        TextView printedVouchers = inflatedFrame.findViewById(R.id.printed_voucher);
+        View canceledOrdersLayout = inflatedFrame.findViewById(R.id.canceled_orders_layout);
+        View printedVoucherLayout = inflatedFrame.findViewById(R.id.printed_voucher_layout);
+
+        Date timestampDate = new Date();
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ITALY);
+        timestamp.setText(dateTimeFormat.format(timestampDate));
+
+        String packageName = null;
+        for (TripBookingReport order : tripBookings) {
+            BookingDetailResponse.Departures.Participant_counters paxes = order.getParticipant_counters();
+            printed_vouchers += paxes.getSNR() + paxes.getADT() + paxes.getCHD() + paxes.getINF();
+            if (!order.getTrip_booking().getStatus().equals("confirmed")) {
+                cancelled_vouchers += paxes.getSNR() + paxes.getADT() + paxes.getCHD() + paxes.getINF();
+                continue;
+            }
+
+            if (packageName == null || !packageName.equals(order.getTrip_package().getId())) {
+                LinearLayout headerView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_print_sale_header, null);
+                TripPackagesResponse pckg = order.getTrip_package();
+                TextView packageTextCode = headerView.findViewById(R.id.package_code);
+                TextView packageTextName = headerView.findViewById(R.id.package_name);
+                packageTextCode.setText(pckg.getCode());
+                packageTextName.setText(pckg.getDescription());
+                container.addView(headerView);
+            }
+            LinearLayout itemView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_print_sale, null);
+            TextView participants = itemView.findViewById(R.id.participants);
+            TextView meetingPoint = itemView.findViewById(R.id.meeting_point);
+            TextView price = itemView.findViewById(R.id.price);
+            TextView priceBase = itemView.findViewById(R.id.price_total);
+
+            Integer SNR = paxes.getSNR();
+            Integer ADT = paxes.getADT();
+            Integer CHD = paxes.getCHD();
+            Integer INF = paxes.getINF();
+            String text_paxes = "";
+
+            text_paxes += order.getTrip_booking().getBooking_code() + "\n";
+            if (SNR != null && SNR > 0) {
+                text_paxes += SNR + " x SNR\n";
+            }
+            if (ADT != null && ADT > 0) {
+                text_paxes += ADT + " x ADT\n";
+            }
+            if (CHD != null && CHD > 0) {
+                text_paxes += CHD + " x CHD\n";
+            }
+            if (INF != null && INF > 0) {
+                text_paxes += INF + " x INF\n";
+            }
+            participants.setText(text_paxes);
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
+            String meetingDate = dateFormat.format(order.getActual_trip().getStart_day());
+            String meetingPointName = order.getActual_trip().getMeeting_point_list_description();
+            String meetingPointTime = order.getActual_trip().getStart_time();
+            meetingPoint.setText(meetingDate + " - " + meetingPointName + (meetingPointTime != null ? " - " + Utilities.formatTimeWithoutSeconds(meetingPointTime) : ""));
+            price.setText(order.getTotal_amount() + " €");
+            Double discountAmount = order.getCoupon_amount();
+            if(discountAmount != null && discountAmount > 0){
+                priceBase.setVisibility(View.VISIBLE);
+                priceBase.setText((order.getTotal_amount() + discountAmount) + " €");
+                priceBase.setPaintFlags(price.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
+            }else{
+                priceBase.setVisibility(View.GONE);
+            }
+
+            container.addView(itemView);
+            packageName = order.getTrip_package().getId();
+
+
+            totalPrice += order.getTotal_amount();
+            if (order.getTrip_booking().getProperties() != null && order.getTrip_booking().getProperties().getOrigin_channel_extra() != null){
+                BookingResponse.TripBooking.TripBookingPropertiesBean.OriginChannelExtra extra = order.getTrip_booking().getProperties().getOrigin_channel_extra();
+                if (extra.getValue() != null && extra.getValue().getPayment_method() != null){
+                    if (extra.getValue().getPayment_method().equals("poynt_cc")){
+                        ccPrice += order.getTotal_amount();
+                    }else{
+                        cashPrice += order.getTotal_amount();
+                    }
+                }else{
+                    cashPrice += order.getTotal_amount();
+                }
+            }else {
+                cashPrice += order.getTotal_amount();
+            }
+        }
+
+        totalSales.setText(totalPrice + "€");
+        cashSales.setText(cashPrice + "€");
+        ccSales.setText(ccPrice + "€");
+
+        if (cancelled_vouchers > 0) canceledOrdersLayout.setVisibility(View.VISIBLE);
+        if (tripBookings.size() > 0) printedVoucherLayout.setVisibility(View.VISIBLE);
+        canceledOrders.setText(String.valueOf(cancelled_vouchers));
+        printedVouchers.setText(String.valueOf(printed_vouchers));
+
+        inflatedFrame.setDrawingCacheEnabled(true);
+        inflatedFrame.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        inflatedFrame.layout(0, 0, inflatedFrame.getMeasuredWidth(), inflatedFrame.getMeasuredHeight());
+        inflatedFrame.buildDrawingCache(true);
+        return inflatedFrame.getDrawingCache();
     }
 
 }
