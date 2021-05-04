@@ -373,9 +373,9 @@ public class PrinterHelper {
             meetingPoint.setText(meetingDate + " - " + meetingPointName + (meetingPointTime != null ? " - " + Utilities.formatTimeWithoutSeconds(meetingPointTime) : ""));
             price.setText(order.getTotal_amount() + " €");
             Double discountAmount = order.getCoupon_amount();
-            if(discountAmount != null && discountAmount > 0){
+            if(discountAmount != null && discountAmount < 0){
                 priceBase.setVisibility(View.VISIBLE);
-                priceBase.setText((order.getTotal_amount() + discountAmount) + " €");
+                priceBase.setText((order.getTotal_amount() - discountAmount) + " €");
                 priceBase.setPaintFlags(price.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
             }else{
                 priceBase.setVisibility(View.GONE);
