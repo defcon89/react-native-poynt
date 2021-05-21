@@ -95,26 +95,38 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   }
 
   @ReactMethod
-  private void printVoucher(String domain_text, String user_text, String booking_string, boolean hidePrice, Callback callback){
+  private void printVoucher(String domain_text, String user_text, String booking_string, String voucher_text, boolean hidePrice, Callback callback){
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
       callback.invoke(false);
       return;
     }
 
-    Bitmap ticket = PrinterHelper.createVoucher(this.reactContext, domain_text, user_text, booking_string, hidePrice);
+    Bitmap ticket = PrinterHelper.createVoucher(this.reactContext, domain_text, user_text, booking_string, voucher_text, hidePrice);
     printBitmap(ticket, callback);
   }
 
   @ReactMethod
-  private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, Callback callback){
+  private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, String voucher_text, Callback callback){
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
       callback.invoke(false);
       return;
     }
 
-    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, tripBooking_text, pkg_text, booking_preview_text, tripBookingParticipant_text, ticket_text);
+    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, tripBooking_text, pkg_text, booking_preview_text, tripBookingParticipant_text, ticket_text, voucher_text);
+    printBitmap(ticket, callback);
+  }
+
+  @ReactMethod
+  private void printSingleVoucher(String domain_text, String user_text, String booking_string, String ticket_text, String voucher_text, boolean hidePrice, Callback callback){
+    if (printerServiceHelper == null) {
+      showToast("MAKE INIT BEFORE PRINT");
+      callback.invoke(false);
+      return;
+    }
+
+    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, booking_string, ticket_text, voucher_text, hidePrice);
     printBitmap(ticket, callback);
   }
 

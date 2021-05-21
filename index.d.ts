@@ -16,6 +16,18 @@ declare class Poynt {
     domain_text: string,
     user_text: string,
     booking_string:string,
+    voucher_text: string,
+    hidePrice:boolean, 
+    callback?: (success: boolean) => void
+  ): Promise<boolean>;
+
+  // Print Single Voucher
+  static printSingleVoucherFromBooking(
+    domain_text:string, 
+    user_text:string,  
+    booking_string:string,
+    ticket_text: string,
+    voucher_text: string,
     hidePrice:boolean, 
     callback?: (success: boolean) => void
   ): Promise<boolean>;
@@ -29,6 +41,7 @@ declare class Poynt {
     booking_preview_text:string, 
     tripBookingParticipant_text:string, 
     ticket_text:string,
+    voucher_text: string,
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 

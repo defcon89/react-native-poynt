@@ -65,15 +65,21 @@ class Poynt {
     PoyntSDK.print(image, callback);
   };
 
-  printVoucher = (domain_text,user_text,booking_string,hidePrice,callback) => {
+  printVoucher = (domain_text,user_text,booking_string,voucher_text,hidePrice,callback) => {
     this.printCallback = callback;
-    PoyntSDK.printVoucher(domain_text,user_text,booking_string,hidePrice,callback);
+    PoyntSDK.printVoucher(domain_text,user_text,booking_string,voucher_text,hidePrice,callback);
   };
 
-  printSingleVoucher = (domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,callback) => {
+  printSingleVoucherFromBooking = (domain_text,user_text,booking_string,ticket_text,voucher_text,hidePrice,callback) => {
     this.printCallback = callback;
-    PoyntSDK.printSingleVoucher(domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,callback);
+    PoyntSDK.printSingleVoucher(domain_text,user_text,booking_string,ticket_text,voucher_text,hidePrice,callback);
+  }
+
+  printSingleVoucher = (domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,voucher_text,callback) => {
+    this.printCallback = callback;
+    PoyntSDK.printSingleVoucher(domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,voucher_text,callback);
   };
+  
 
   printSalesSummary = (tripBookingsReport_text, callback) => {
     this.printCallback = callback;
