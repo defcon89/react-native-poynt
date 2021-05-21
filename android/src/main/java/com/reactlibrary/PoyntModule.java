@@ -62,12 +62,20 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     this.printerServiceHelper = new PrinterServiceHelper(this.reactContext, new PrinterServiceHelper.PrinterCallback() {
       @Override
       public void onPrinterResponse(PrinterStatus status) {
-        callback.invoke(true);
+        try {
+          callback.invoke(true);
+        }catch (Exception e){
+          e.printStackTrace();
+        }
       }
 
       @Override
       public void onPrinterReconnect(IBinder binder) {
-        callback.invoke(true);
+        try {
+          callback.invoke(true);
+        }catch (Exception e){
+          e.printStackTrace();
+        }
       }
 
       @Override
