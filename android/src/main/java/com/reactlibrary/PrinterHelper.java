@@ -293,8 +293,11 @@ public class PrinterHelper {
         pckgCode.setText(pckg.getCode());
 
         TextView priceText = frameLayout.findViewById(R.id.price);
-        priceText.setVisibility(View.VISIBLE);
         priceText.setText(ticket.getPrice() + "€");
+        priceText.setVisibility(View.VISIBLE);
+        if(hidePrice){
+            priceText.setVisibility(View.GONE);
+        }
 
         TextView booking_code = frameLayout.findViewById(R.id.booking_code);
         booking_code.setText(booking.getBooking().getBooking_code());
