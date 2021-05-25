@@ -11,7 +11,7 @@
     <LinearLayout
         android:layout_width="290dp"
         android:layout_height="match_parent"
-        android:layout_marginBottom="200dp"
+        android:layout_marginBottom="130dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -186,10 +186,21 @@
             tools:text="18.00€" />
 
         <TextView
-            android:id="@+id/business_info"
+            android:id="@+id/voucher_text_extra"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:textColor="#000"
+            android:textStyle="bold"
+            tools:text="" />
+
+        <TextView
+            android:id="@+id/business_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:textAllCaps="true"
             android:textColor="#000"

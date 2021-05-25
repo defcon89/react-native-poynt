@@ -126,23 +126,30 @@ public class PrinterHelper {
         }
         paxes.setText(text_paxes);
 
-        String voucherText = voucher_text;
-        if (voucherText.isEmpty()) {
-            DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
-            try {
-                voucherText = domain.getEntity().getDescription() + ", "
-                        + domain.getEntity().getPrimary_address().getStreet() + " "
-                        + domain.getEntity().getPrimary_address().getNumber() + ", "
-                        + domain.getEntity().getPrimary_address().getCity() + " "
-                        + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
-                        + domain.getEntity().getPrimary_address().getZip_code() + ", "
-                        + "P.iva " + domain.getEntity().getPiva();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String businessInfo = "";
+        DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
+        try {
+            businessInfo = domain.getEntity().getDescription() + ", "
+                    + domain.getEntity().getPrimary_address().getStreet() + " "
+                    + domain.getEntity().getPrimary_address().getNumber() + ", "
+                    + domain.getEntity().getPrimary_address().getCity() + " "
+                    + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
+                    + domain.getEntity().getPrimary_address().getZip_code() + ", "
+                    + "P.iva " + domain.getEntity().getPiva();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         TextView business_info = frameLayout.findViewById(R.id.business_info);
-        business_info.setText(voucherText);
+        business_info.setText(businessInfo);
+
+        String voucherText = voucher_text;
+        TextView voucher_text_extra = frameLayout.findViewById(R.id.voucher_text_extra);
+        voucher_text_extra.setVisibility(View.GONE);
+        if (!voucherText.isEmpty()) {
+            voucher_text_extra.setVisibility(View.VISIBLE);
+            voucher_text_extra.setText(voucherText);
+        }
 
         TextView travelDate = frameLayout.findViewById(R.id.travel_date_time);
         String time = at_going.getStart_time();
@@ -249,23 +256,30 @@ public class PrinterHelper {
         }
         paxes.setText(text_paxes);
 
-        String voucherText = voucher_text;
-        if (voucherText.isEmpty()) {
-            DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
-            try {
-                voucherText = domain.getEntity().getDescription() + ", "
-                        + domain.getEntity().getPrimary_address().getStreet() + " "
-                        + domain.getEntity().getPrimary_address().getNumber() + ", "
-                        + domain.getEntity().getPrimary_address().getCity() + " "
-                        + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
-                        + domain.getEntity().getPrimary_address().getZip_code() + ", "
-                        + "P.iva " + domain.getEntity().getPiva();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String businessInfo = "";
+        DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
+        try {
+            businessInfo = domain.getEntity().getDescription() + ", "
+                    + domain.getEntity().getPrimary_address().getStreet() + " "
+                    + domain.getEntity().getPrimary_address().getNumber() + ", "
+                    + domain.getEntity().getPrimary_address().getCity() + " "
+                    + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
+                    + domain.getEntity().getPrimary_address().getZip_code() + ", "
+                    + "P.iva " + domain.getEntity().getPiva();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         TextView business_info = frameLayout.findViewById(R.id.business_info);
-        business_info.setText(voucherText);
+        business_info.setText(businessInfo);
+
+        String voucherText = voucher_text;
+        TextView voucher_text_extra = frameLayout.findViewById(R.id.voucher_text_extra);
+        voucher_text_extra.setVisibility(View.GONE);
+        if (!voucherText.isEmpty()) {
+            voucher_text_extra.setVisibility(View.VISIBLE);
+            voucher_text_extra.setText(voucherText);
+        }
 
         TextView travelDate = frameLayout.findViewById(R.id.travel_date_time);
         String time = at_going.getStart_time();
@@ -364,23 +378,30 @@ public class PrinterHelper {
         TextView paxes = frameLayout.findViewById(R.id.paxes);
         paxes.setText(text_paxes);
 
-        String voucherText = voucher_text;
-        if (voucherText.isEmpty()) {
-            DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
-            try {
-                voucherText = domain.getEntity().getDescription() + ", "
-                        + domain.getEntity().getPrimary_address().getStreet() + " "
-                        + domain.getEntity().getPrimary_address().getNumber() + ", "
-                        + domain.getEntity().getPrimary_address().getCity() + " "
-                        + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
-                        + domain.getEntity().getPrimary_address().getZip_code() + ", "
-                        + "P.iva " + domain.getEntity().getPiva();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String businessInfo = "";
+        DomainInfoResponse domain = gson.fromJson(domain_text, DomainInfoResponse.class);
+        try {
+            businessInfo = domain.getEntity().getDescription() + ", "
+                    + domain.getEntity().getPrimary_address().getStreet() + " "
+                    + domain.getEntity().getPrimary_address().getNumber() + ", "
+                    + domain.getEntity().getPrimary_address().getCity() + " "
+                    + "(" + domain.getEntity().getPrimary_address().getProvince() + ") "
+                    + domain.getEntity().getPrimary_address().getZip_code() + ", "
+                    + "P.iva " + domain.getEntity().getPiva();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
         TextView business_info = frameLayout.findViewById(R.id.business_info);
-        business_info.setText(voucherText);
+        business_info.setText(businessInfo);
+
+        String voucherText = voucher_text;
+        TextView voucher_text_extra = frameLayout.findViewById(R.id.voucher_text_extra);
+        voucher_text_extra.setVisibility(View.GONE);
+        if (!voucherText.isEmpty()) {
+            voucher_text_extra.setVisibility(View.VISIBLE);
+            voucher_text_extra.setText(voucherText);
+        }
 
         TextView travelDate = frameLayout.findViewById(R.id.travel_date_time);
         String time = booking_preview.getPreview().getTrip().getGoing().getActual_trip().getStart_time();
