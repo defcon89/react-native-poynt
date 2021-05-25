@@ -72,7 +72,7 @@ class Poynt {
 
   printSingleVoucherFromBooking = (domain_text,user_text,booking_string,ticket_text,voucher_text,hidePrice,callback) => {
     this.printCallback = callback;
-    PoyntSDK.printSingleVoucher(domain_text,user_text,booking_string,ticket_text,voucher_text,hidePrice,callback);
+    PoyntSDK.printSingleVoucherFromBooking(domain_text,user_text,booking_string,ticket_text,voucher_text,hidePrice,callback);
   }
 
   printSingleVoucher = (domain_text,user_text,tripBooking_text,pkg_text,booking_preview_text,tripBookingParticipant_text,ticket_text,voucher_text,callback) => {

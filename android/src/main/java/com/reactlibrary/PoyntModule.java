@@ -119,7 +119,7 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   }
 
   @ReactMethod
-  private void printSingleVoucher(String domain_text, String user_text, String booking_string, String ticket_text, String voucher_text, boolean hidePrice, Callback callback){
+  private void printSingleVoucherFromBooking(String domain_text, String user_text, String booking_string, String ticket_text, String voucher_text, boolean hidePrice, Callback callback){
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
       callback.invoke(false);
