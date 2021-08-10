@@ -522,7 +522,7 @@ public class PrinterHelper {
             price.setText(order.getTotal_amount() + " €");
             Double discountAmount = order.getCoupon_amount();
             if (discountAmount != null && discountAmount < 0) {
-                double totalDiscounted = Math.round((order.getTotal_amount() - discountAmount) * 100);
+                double totalDiscounted = Math.round((order.getTotal_amount() - discountAmount) * 100)/100;
                 priceBase.setVisibility(View.VISIBLE);
                 priceBase.setText(totalDiscounted + " €");
                 priceBase.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
