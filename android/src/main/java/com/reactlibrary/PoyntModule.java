@@ -83,7 +83,6 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
 
       }
     });
-    printerServiceHelper.bindAccessoryManager();
   }
 
   /**
@@ -91,7 +90,8 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
    */
   @ReactMethod
   private void isPoyntTerminal(Promise promise) {
-    promise.resolve("POYNT".equals(Build.MANUFACTURER));
+    String manufacturer = android.os.Build.MANUFACTURER;
+    promise.resolve(manufacturer.toLowerCase().contains("poynt") || manufacturer.toLowerCase().contains("newland"));
   }
 
   @ReactMethod
@@ -175,7 +175,8 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
 
   @Override
   public void onHostPause() {
-
+    if (this.printerServiceHelper == null) return;  
+    this.printerServiceHelper.unBindServices();
   }
 
   @Override
@@ -266,9 +267,9 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
         }
       } else {
         Log.e("PRINTER", "NOT CONNECTED");
+        printerServiceHelper.reconnectPrinter(printer);
         if (callback != null) callback.invoke(false);
         showToast("PRINTER NOT CONNECTED");
-        printerServiceHelper.reconnectPrinter(printer);
       }
     }
   }
