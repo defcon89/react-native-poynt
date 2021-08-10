@@ -15,32 +15,32 @@ declare class Poynt {
   static printVoucher(
     domain_text: string,
     user_text: string,
-    booking_string:string,
+    booking_string: string,
     voucher_text: string,
-    hidePrice:boolean, 
+    hidePrice: boolean,
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 
   // Print Single Voucher
   static printSingleVoucherFromBooking(
-    domain_text:string, 
-    user_text:string,  
-    booking_string:string,
+    domain_text: string,
+    user_text: string,
+    booking_string: string,
     ticket_text: string,
     voucher_text: string,
-    hidePrice:boolean, 
+    hidePrice: boolean,
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 
   // Print Single Voucher
   static printSingleVoucher(
-    domain_text:string, 
-    user_text:string, 
-    tripBooking_text:string,
-    pkg_text:string, 
-    booking_preview_text:string, 
-    tripBookingParticipant_text:string, 
-    ticket_text:string,
+    domain_text: string,
+    user_text: string,
+    tripBooking_text: string,
+    pkg_text: string,
+    booking_preview_text: string,
+    tripBookingParticipant_text: string,
+    ticket_text: string,
     voucher_text: string,
     callback?: (success: boolean) => void
   ): Promise<boolean>;
@@ -60,6 +60,9 @@ declare class Poynt {
 
   // isPoyntTerminal
   static async isPoyntTerminal(): Promise<boolean>;
+
+  // refresh Printers
+  static refreshPrinters(): Promise<boolean>;
 }
 
 export default Poynt;

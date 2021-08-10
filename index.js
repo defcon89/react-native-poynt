@@ -60,6 +60,10 @@ class Poynt {
     PoyntSDK.init(callback);
   };
 
+  refreshPrinters = () => {
+    PoyntSDK.refreshPrinters();
+  };
+
   print = (image, callback) => {
     this.printCallback = callback;
     PoyntSDK.print(image, callback);

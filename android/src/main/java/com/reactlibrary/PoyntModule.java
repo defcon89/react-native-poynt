@@ -85,6 +85,16 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     });
   }
 
+  @ReactMethod
+  public void refreshPrinters(Promise promise){
+    if (printerServiceHelper == null) {
+      showToast("MAKE INIT BEFORE PRINT");
+      return;
+    }
+
+    printerServiceHelper.refreshPrinters();
+  }
+
   /**
    * @return true is the app is running on a Poynt terminal and has a card reader
    */

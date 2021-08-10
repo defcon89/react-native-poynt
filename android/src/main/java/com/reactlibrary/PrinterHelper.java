@@ -177,9 +177,9 @@ public class PrinterHelper {
         pckgCode.setText(pckg.getCode());
 
         TextView priceText = frameLayout.findViewById(R.id.price);
-        if(hidePrice){
+        if (hidePrice) {
             priceText.setVisibility(View.GONE);
-        }else {
+        } else {
             priceText.setText(booking.getBooking().getTotal_amount() + "€");
         }
 
@@ -309,7 +309,7 @@ public class PrinterHelper {
         TextView priceText = frameLayout.findViewById(R.id.price);
         priceText.setText(ticket.getPrice() + "€");
         priceText.setVisibility(View.VISIBLE);
-        if(hidePrice){
+        if (hidePrice) {
             priceText.setVisibility(View.GONE);
         }
 
@@ -451,7 +451,8 @@ public class PrinterHelper {
         int printed_vouchers = 0;
 
         Gson gson = getGson();
-        List<TripBookingReport> tripBookings = gson.fromJson(tripBookingsReport_text, new TypeToken<List<TripBookingReport>>(){}.getType());
+        List<TripBookingReport> tripBookings = gson.fromJson(tripBookingsReport_text, new TypeToken<List<TripBookingReport>>() {
+        }.getType());
         View inflatedFrame = LayoutInflater.from(context).inflate(R.layout.print_sales_summary, null);
 
         TextView timestamp = inflatedFrame.findViewById(R.id.timestamp);
@@ -520,11 +521,12 @@ public class PrinterHelper {
             meetingPoint.setText(meetingDate + " - " + meetingPointName + (meetingPointTime != null ? " - " + Utilities.formatTimeWithoutSeconds(meetingPointTime) : ""));
             price.setText(order.getTotal_amount() + " €");
             Double discountAmount = order.getCoupon_amount();
-            if(discountAmount != null && discountAmount < 0){
+            if (discountAmount != null && discountAmount < 0) {
+                double totalDiscounted = Math.round((order.getTotal_amount() - discountAmount) * 100);
                 priceBase.setVisibility(View.VISIBLE);
-                priceBase.setText((order.getTotal_amount() - discountAmount) + " €");
-                priceBase.setPaintFlags(price.getPaintFlags()| Paint.STRIKE_THRU_TEXT_FLAG);
-            }else{
+                priceBase.setText(totalDiscounted + " €");
+                priceBase.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            } else {
                 priceBase.setVisibility(View.GONE);
             }
 
@@ -533,21 +535,25 @@ public class PrinterHelper {
 
 
             totalPrice += order.getTotal_amount();
-            if (order.getTrip_booking().getProperties() != null && order.getTrip_booking().getProperties().getOrigin_channel_extra() != null){
+            if (order.getTrip_booking().getProperties() != null && order.getTrip_booking().getProperties().getOrigin_channel_extra() != null) {
                 BookingResponse.TripBooking.TripBookingPropertiesBean.OriginChannelExtra extra = order.getTrip_booking().getProperties().getOrigin_channel_extra();
-                if (extra.getValue() != null && extra.getValue().getPayment_method() != null){
-                    if (extra.getValue().getPayment_method().equals("poynt_cc")){
+                if (extra.getValue() != null && extra.getValue().getPayment_method() != null) {
+                    if (extra.getValue().getPayment_method().equals("poynt_cc")) {
                         ccPrice += order.getTotal_amount();
-                    }else{
+                    } else {
                         cashPrice += order.getTotal_amount();
                     }
-                }else{
+                } else {
                     cashPrice += order.getTotal_amount();
                 }
-            }else {
+            } else {
                 cashPrice += order.getTotal_amount();
             }
         }
+
+        totalPrice = Math.round(totalPrice * 100) / 100;
+        cashPrice = Math.round(cashPrice * 100) / 100;
+        ccPrice = Math.round(ccPrice * 100) / 100;
 
         totalSales.setText(totalPrice + "€");
         cashSales.setText(cashPrice + "€");
