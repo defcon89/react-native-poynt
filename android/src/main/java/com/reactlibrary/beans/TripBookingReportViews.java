@@ -51,6 +51,7 @@ public class TripBookingReportViews {
     private String trip_booking_created_by_name;
     private String trip_booking_entity_code;
     private String trip_booking_entity_customer_code;
+    private String full_value;
 
     public String getTrip_booking_entity_customer_code() {
         return trip_booking_entity_customer_code;
@@ -426,5 +427,53 @@ public class TripBookingReportViews {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getFull_value() {
+        return full_value;
+    }
+
+    public void setFull_value(String full_value) {
+        this.full_value = full_value;
+    }
+
+
+    public static class PaymentData {
+        private String transaction_id;
+        private String payment_method;
+        private String payment_method_title;
+        private Date date_paid;
+
+        public String getTransaction_id() {
+            return transaction_id;
+        }
+
+        public void setTransaction_id(String transaction_id) {
+            this.transaction_id = transaction_id;
+        }
+
+        public String getPayment_method() {
+            return payment_method;
+        }
+
+        public void setPayment_method(String payment_method) {
+            this.payment_method = payment_method;
+        }
+
+        public String getPayment_method_title() {
+            return payment_method_title;
+        }
+
+        public void setPayment_method_title(String payment_method_title) {
+            this.payment_method_title = payment_method_title;
+        }
+
+        public Date getDate_paid() {
+            return date_paid;
+        }
+
+        public void setDate_paid(Date date_paid) {
+            this.date_paid = date_paid;
+        }
     }
 }

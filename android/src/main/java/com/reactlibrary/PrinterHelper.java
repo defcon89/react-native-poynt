@@ -23,6 +23,7 @@ import com.reactlibrary.beans.BookingPreviewResponse;
 import com.reactlibrary.beans.BookingResponse;
 import com.reactlibrary.beans.DomainInfoResponse;
 import com.reactlibrary.beans.TripBookingReport;
+import com.reactlibrary.beans.TripBookingReportViews;
 import com.reactlibrary.beans.TripPackagesResponse;
 import com.reactlibrary.beans.UserResponse;
 import com.reactlibrary.statics.Utilities;
@@ -451,7 +452,7 @@ public class PrinterHelper {
         int printed_vouchers = 0;
 
         Gson gson = getGson();
-        List<TripBookingReport> tripBookings = gson.fromJson(tripBookingsReport_text, new TypeToken<List<TripBookingReport>>() {
+        List<TripBookingReportViews> tripBookings = gson.fromJson(tripBookingsReport_text, new TypeToken<List<TripBookingReportViews>>() {
         }.getType());
         View inflatedFrame = LayoutInflater.from(context).inflate(R.layout.print_sales_summary, null);
 
@@ -470,21 +471,20 @@ public class PrinterHelper {
         timestamp.setText(dateTimeFormat.format(timestampDate));
 
         String packageName = null;
-        for (TripBookingReport order : tripBookings) {
-            BookingDetailResponse.Departures.Participant_counters paxes = order.getParticipant_counters();
+        for (TripBookingReportViews order : tripBookings) {
+            BookingDetailResponse.Departures.Participant_counters paxes = order.getTrip_booking_participant_counters();
             printed_vouchers += paxes.getSNR() + paxes.getADT() + paxes.getCHD() + paxes.getINF();
-            if (!order.getTrip_booking().getStatus().equals("confirmed")) {
+            if (!order.getTrip_booking_status().equals("confirmed")) {
                 cancelled_vouchers += paxes.getSNR() + paxes.getADT() + paxes.getCHD() + paxes.getINF();
                 continue;
             }
 
-            if (packageName == null || !packageName.equals(order.getTrip_package().getId())) {
+            if (packageName == null || !packageName.equals(order.getTrip_package_id())) {
                 LinearLayout headerView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_print_sale_header, null);
-                TripPackagesResponse pckg = order.getTrip_package();
                 TextView packageTextCode = headerView.findViewById(R.id.package_code);
                 TextView packageTextName = headerView.findViewById(R.id.package_name);
-                packageTextCode.setText(pckg.getCode());
-                packageTextName.setText(pckg.getDescription());
+                packageTextCode.setText(order.getTrip_package_code());
+                packageTextName.setText(order.getTrip_package_description());
                 container.addView(headerView);
             }
             LinearLayout itemView = (LinearLayout) LayoutInflater.from(context).inflate(R.layout.item_print_sale, null);
@@ -499,7 +499,7 @@ public class PrinterHelper {
             Integer INF = paxes.getINF();
             String text_paxes = "";
 
-            text_paxes += order.getTrip_booking().getBooking_code() + "\n";
+            text_paxes += order.getTrip_booking_booking_code() + "\n";
             if (SNR != null && SNR > 0) {
                 text_paxes += SNR + " x SNR\n";
             }
@@ -515,14 +515,14 @@ public class PrinterHelper {
             participants.setText(text_paxes);
 
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.ITALY);
-            String meetingDate = dateFormat.format(order.getActual_trip().getStart_day());
-            String meetingPointName = order.getActual_trip().getMeeting_point_list_description();
-            String meetingPointTime = order.getActual_trip().getStart_time();
+            String meetingDate = dateFormat.format(order.getActual_trip_start_day());
+            String meetingPointName = order.getActual_trip_meeting_point_list_description();
+            String meetingPointTime = order.getActual_trip_start_time();
             meetingPoint.setText(meetingDate + " - " + meetingPointName + (meetingPointTime != null ? " - " + Utilities.formatTimeWithoutSeconds(meetingPointTime) : ""));
             price.setText(order.getTotal_amount() + " €");
             Double discountAmount = order.getCoupon_amount();
             if (discountAmount != null && discountAmount < 0) {
-                double totalDiscounted = Math.round((order.getTotal_amount() - discountAmount) * 100)/100;
+                double totalDiscounted = Math.round((order.getTotal_amount() - discountAmount) * 100) / 100;
                 priceBase.setVisibility(View.VISIBLE);
                 priceBase.setText(totalDiscounted + " €");
                 priceBase.setPaintFlags(price.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -531,18 +531,17 @@ public class PrinterHelper {
             }
 
             container.addView(itemView);
-            packageName = order.getTrip_package().getId();
+            packageName = order.getTrip_package_id();
 
 
             totalPrice += order.getTotal_amount();
-            if (order.getTrip_booking().getProperties() != null && order.getTrip_booking().getProperties().getOrigin_channel_extra() != null) {
-                BookingResponse.TripBooking.TripBookingPropertiesBean.OriginChannelExtra extra = order.getTrip_booking().getProperties().getOrigin_channel_extra();
-                if (extra.getValue() != null && extra.getValue().getPayment_method() != null) {
-                    if (extra.getValue().getPayment_method().equals("poynt_cc")) {
-                        ccPrice += order.getTotal_amount();
-                    } else {
-                        cashPrice += order.getTotal_amount();
-                    }
+
+            String paymentData_text = order.getFull_value();
+            if (paymentData_text != null) {
+                TripBookingReportViews.PaymentData paymentData = gson.fromJson(paymentData_text, new TypeToken<TripBookingReportViews.PaymentData>() {
+                }.getType());
+                if (paymentData.getPayment_method().equals("poynt_cc")) {
+                    ccPrice += order.getTotal_amount();
                 } else {
                     cashPrice += order.getTotal_amount();
                 }
