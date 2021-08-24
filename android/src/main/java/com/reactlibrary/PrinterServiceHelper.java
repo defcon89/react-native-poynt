@@ -44,7 +44,9 @@ public class PrinterServiceHelper {
 
     public interface PrinterCallback {
         void onPrinterResponse(PrinterStatus status);
+
         void onPrinterReconnect(IBinder binder);
+
         void logMessage(String s);
     }
 
@@ -61,8 +63,12 @@ public class PrinterServiceHelper {
 
 
     public void unBindServices() {
-        context.unbindService(accessoryService);
-        unBindPrinters();
+        try {
+            context.unbindService(accessoryService);
+            unBindPrinters();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void unBindPrinters() {
