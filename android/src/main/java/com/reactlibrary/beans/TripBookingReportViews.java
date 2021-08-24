@@ -12,7 +12,7 @@ public class TripBookingReportViews {
     private String return_trip_booking_package_id;
     private String trip_booking_payment_type_id;
     private Date trip_booking_booking_date;
-    private String actual_trip_start_day;
+    private Date actual_trip_start_day;
     private String actual_trip_start_time;
     private String trip_package_id;
     private Integer is_return_trip_included;
@@ -357,11 +357,11 @@ public class TripBookingReportViews {
         this.actual_trip_start_time = actual_trip_start_time;
     }
 
-    public String getActual_trip_start_day() {
+    public Date getActual_trip_start_day() {
         return actual_trip_start_day;
     }
 
-    public void setActual_trip_start_day(String actual_trip_start_day) {
+    public void setActual_trip_start_day(Date actual_trip_start_day) {
         this.actual_trip_start_day = actual_trip_start_day;
     }
 
