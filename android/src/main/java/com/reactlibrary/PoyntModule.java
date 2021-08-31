@@ -165,11 +165,11 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
     }
 
     @ReactMethod
-    public void pay(double amount, String currencyCode) {
+    public void pay(int amount, String currencyCode) {
         Activity currentActivity = getCurrentActivity();
 
         Payment payment = new Payment();
-        payment.setAmount((int) amount * 100);
+        payment.setAmount(amount);
         payment.setCurrency(currencyCode);
 
         Intent collectPaymentIntent = new Intent(Intents.ACTION_COLLECT_PAYMENT);
