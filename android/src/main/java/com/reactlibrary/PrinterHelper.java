@@ -536,10 +536,8 @@ public class PrinterHelper {
 
             totalPrice += order.getTotal_amount();
 
-            String paymentData_text = order.getFull_value();
-            if (paymentData_text != null) {
-                TripBookingReportViews.PaymentData paymentData = gson.fromJson(paymentData_text, new TypeToken<TripBookingReportViews.PaymentData>() {
-                }.getType());
+            TripBookingReportViews.PaymentData paymentData = order.getTrip_booking_origin_channel_extra();
+            if (paymentData != null) {
                 if (paymentData.getPayment_method().equals("poynt_cc")) {
                     ccPrice += order.getTotal_amount();
                 } else {

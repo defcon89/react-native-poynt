@@ -51,7 +51,7 @@ public class TripBookingReportViews {
     private String trip_booking_created_by_name;
     private String trip_booking_entity_code;
     private String trip_booking_entity_customer_code;
-    private String full_value;
+    private PaymentData trip_booking_origin_channel_extra;
 
     public String getTrip_booking_entity_customer_code() {
         return trip_booking_entity_customer_code;
@@ -429,14 +429,13 @@ public class TripBookingReportViews {
         this.id = id;
     }
 
-    public String getFull_value() {
-        return full_value;
+    public PaymentData getTrip_booking_origin_channel_extra() {
+        return trip_booking_origin_channel_extra;
     }
 
-    public void setFull_value(String full_value) {
-        this.full_value = full_value;
+    public void setTrip_booking_origin_channel_extra(PaymentData trip_booking_origin_channel_extra) {
+        this.trip_booking_origin_channel_extra = trip_booking_origin_channel_extra;
     }
-
 
     public static class PaymentData {
         private String transaction_id;
