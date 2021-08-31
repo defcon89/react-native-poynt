@@ -548,10 +548,6 @@ public class PrinterHelper {
             }
         }
 
-        totalPrice = Math.round(totalPrice * 100) / 100;
-        cashPrice = Math.round(cashPrice * 100) / 100;
-        ccPrice = Math.round(ccPrice * 100) / 100;
-
         totalSales.setText(totalPrice + "€");
         cashSales.setText(cashPrice + "€");
         ccSales.setText(ccPrice + "€");

@@ -41,281 +41,281 @@ import co.poynt.os.services.v1.IPoyntPrinterService;
 import static com.facebook.react.bridge.UiThreadUtil.runOnUiThread;
 
 public class PoyntModule extends ReactContextBaseJavaModule implements LifecycleEventListener, ActivityEventListener {
-  private final int COLLECT_PAYMENT_REQUEST = 101;
-  private final ReactApplicationContext reactContext;
-  private PrinterServiceHelper printerServiceHelper;
+    private final int COLLECT_PAYMENT_REQUEST = 101;
+    private final ReactApplicationContext reactContext;
+    private PrinterServiceHelper printerServiceHelper;
 
-  public PoyntModule(ReactApplicationContext reactContext) {
-    super(reactContext);
-    this.reactContext = reactContext;
-    this.reactContext.addLifecycleEventListener(this);
-    this.reactContext.addActivityEventListener(this);
-  }
+    public PoyntModule(ReactApplicationContext reactContext) {
+        super(reactContext);
+        this.reactContext = reactContext;
+        this.reactContext.addLifecycleEventListener(this);
+        this.reactContext.addActivityEventListener(this);
+    }
 
-  @Override
-  public String getName() {
-    return "Poynt";
-  }
+    @Override
+    public String getName() {
+        return "Poynt";
+    }
 
-  @ReactMethod
-  public void init(final Callback callback) {
-    this.printerServiceHelper = new PrinterServiceHelper(this.reactContext, new PrinterServiceHelper.PrinterCallback() {
-      @Override
-      public void onPrinterResponse(PrinterStatus status) {
-        try {
-          callback.invoke(true);
-        }catch (Exception e){
-          e.printStackTrace();
+    @ReactMethod
+    public void init(final Callback callback) {
+        this.printerServiceHelper = new PrinterServiceHelper(this.reactContext, new PrinterServiceHelper.PrinterCallback() {
+            @Override
+            public void onPrinterResponse(PrinterStatus status) {
+                try {
+                    callback.invoke(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onPrinterReconnect(IBinder binder) {
+                try {
+                    callback.invoke(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void logMessage(String s) {
+
+            }
+        });
+    }
+
+    @ReactMethod
+    public void refreshPrinters(Promise promise) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            return;
         }
-      }
 
-      @Override
-      public void onPrinterReconnect(IBinder binder) {
-        try {
-          callback.invoke(true);
-        }catch (Exception e){
-          e.printStackTrace();
+        printerServiceHelper.refreshPrinters();
+    }
+
+    /**
+     * @return true is the app is running on a Poynt terminal and has a card reader
+     */
+    @ReactMethod
+    private void isPoyntTerminal(Promise promise) {
+        String manufacturer = android.os.Build.MANUFACTURER;
+        promise.resolve(manufacturer.toLowerCase().contains("poynt") || manufacturer.toLowerCase().contains("newland"));
+    }
+
+    @ReactMethod
+    private void printVoucher(String domain_text, String user_text, String booking_string, String voucher_text, boolean hidePrice, Callback callback) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            callback.invoke(false);
+            return;
         }
-      }
 
-      @Override
-      public void logMessage(String s) {
-
-      }
-    });
-  }
-
-  @ReactMethod
-  public void refreshPrinters(Promise promise){
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      return;
+        Bitmap ticket = PrinterHelper.createVoucher(this.reactContext, domain_text, user_text, booking_string, voucher_text, hidePrice);
+        printBitmap(ticket, callback);
     }
 
-    printerServiceHelper.refreshPrinters();
-  }
-
-  /**
-   * @return true is the app is running on a Poynt terminal and has a card reader
-   */
-  @ReactMethod
-  private void isPoyntTerminal(Promise promise) {
-    String manufacturer = android.os.Build.MANUFACTURER;
-    promise.resolve(manufacturer.toLowerCase().contains("poynt") || manufacturer.toLowerCase().contains("newland"));
-  }
-
-  @ReactMethod
-  private void printVoucher(String domain_text, String user_text, String booking_string, String voucher_text, boolean hidePrice, Callback callback){
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      callback.invoke(false);
-      return;
-    }
-
-    Bitmap ticket = PrinterHelper.createVoucher(this.reactContext, domain_text, user_text, booking_string, voucher_text, hidePrice);
-    printBitmap(ticket, callback);
-  }
-
-  @ReactMethod
-  private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, String voucher_text, Callback callback){
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      callback.invoke(false);
-      return;
-    }
-
-    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, tripBooking_text, pkg_text, booking_preview_text, tripBookingParticipant_text, ticket_text, voucher_text);
-    printBitmap(ticket, callback);
-  }
-
-  @ReactMethod
-  private void printSingleVoucherFromBooking(String domain_text, String user_text, String booking_string, String ticket_text, String voucher_text, boolean hidePrice, Callback callback){
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      callback.invoke(false);
-      return;
-    }
-
-    Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, booking_string, ticket_text, voucher_text, hidePrice);
-    printBitmap(ticket, callback);
-  }
-
-  @ReactMethod
-  private void printSalesSummary(String tripBookingsReport_text, Callback callback){
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      callback.invoke(false);
-      return;
-    }
-
-    Bitmap summary = PrinterHelper.createSalesSummaryTicket(this.reactContext, tripBookingsReport_text);
-    printBitmap(summary, callback);
-  }
-
-  @ReactMethod
-  public void print(String filePath, Callback callback) {
-    if (printerServiceHelper == null) {
-      showToast("MAKE INIT BEFORE PRINT");
-      callback.invoke(false);
-      return;
-    }
-
-    Bitmap bmp = BitmapFactory.decodeFile(filePath);
-    printBitmap(bmp, callback);
-  }
-
-  @ReactMethod
-  public void pay(int amount, String currencyCode) {
-    Activity currentActivity = getCurrentActivity();
-
-    Payment payment = new Payment();
-    payment.setAmount(amount * 100);
-    payment.setCurrency(currencyCode);
-
-    Intent collectPaymentIntent = new Intent(Intents.ACTION_COLLECT_PAYMENT);
-    collectPaymentIntent.putExtra(Intents.INTENT_EXTRAS_PAYMENT, payment);
-    currentActivity.startActivityForResult(collectPaymentIntent, COLLECT_PAYMENT_REQUEST);
-  }
-
-  @Override
-  public void onHostResume() {
-    if (this.printerServiceHelper == null) return;
-    this.printerServiceHelper.bindAccessoryManager();
-  }
-
-  @Override
-  public void onHostPause() {
-    if (this.printerServiceHelper == null) return;  
-    this.printerServiceHelper.unBindServices();
-  }
-
-  @Override
-  public void onHostDestroy() {
-    if (this.printerServiceHelper == null) return;
-    this.printerServiceHelper.unBindServices();
-    this.printerServiceHelper.unBindPrinters();
-  }
-
-  @Override
-  public void onNewIntent(Intent intent) {
-
-  }
-
-  @Override
-  public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
-    Gson gson = new Gson();
-
-    // Check which request we're responding to
-    if (requestCode == COLLECT_PAYMENT_REQUEST) {
-      // Make sure the request was successful
-      if (resultCode == Activity.RESULT_OK) {
-        if (data != null) {
-          Payment payment = data.getParcelableExtra(Intents.INTENT_EXTRAS_PAYMENT);
-          Log.d("POYNT", "Received onPaymentAction from PaymentFragment w/ Status(" + payment.getStatus() + ")");
-          if (payment.getStatus().equals(PaymentStatus.COMPLETED)) {
-            WritableMap params = Arguments.createMap();
-            params.putString("transaction_id", payment.getTransactionId());
-            params.putString("payment_method", payment.getActionLabel());
-            params.putString("raw_data", gson.toJson(payment));
-            sendEvent("paymentCompleted", params);
-          } else if (payment.getStatus().equals(PaymentStatus.AUTHORIZED)) {
-            sendEvent("paymentAuthorized", true);
-          } else if (payment.getStatus().equals(PaymentStatus.CANCELED)) {
-            sendEvent("paymentCanceled", true);
-          } else if (payment.getStatus().equals(PaymentStatus.FAILED)) {
-            sendEvent("paymentFailed", true);
-          } else if (payment.getStatus().equals(PaymentStatus.REFUNDED)) {
-            sendEvent("paymentRefunded", true);
-          } else if (payment.getStatus().equals(PaymentStatus.VOIDED)) {
-            sendEvent("paymentVoided", true);
-          }
+    @ReactMethod
+    private void printSingleVoucher(String domain_text, String user_text, String tripBooking_text, String pkg_text, String booking_preview_text, String tripBookingParticipant_text, String ticket_text, String voucher_text, Callback callback) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            callback.invoke(false);
+            return;
         }
-      } else if (resultCode == Activity.RESULT_CANCELED) {
-        sendEvent("paymentCanceled", true);
-      }
-    }
-  }
 
-  //////////////////////////////////
-  // LOCAL PRIVATE METHODS
-  //////////////////////////////////
-  // print bitmap
-  private void printBitmap(Bitmap bmp, Callback callback){
-    if (bmp == null) {
-      callback.invoke(false);
-      return;
+        Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, tripBooking_text, pkg_text, booking_preview_text, tripBookingParticipant_text, ticket_text, voucher_text);
+        printBitmap(ticket, callback);
     }
 
-    Bundle data = new Bundle();
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-    bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-    byte[] byteArray = stream.toByteArray();
-    bmp.recycle();
-
-    HashMap<AccessoryProvider, IBinder> printers = printerServiceHelper.getPrinters();
-    for (AccessoryProvider printer : printers.keySet()) {
-      if (printer.isConnected()) {
-        final IPoyntPrinterService printerService = IPoyntPrinterService.Stub.asInterface(printers.get(printer));
-        showToast("PRINTER CONNECTED");
-        if (printerService != null) {
-          Log.e("PRINTER", "SERVICE CONNECTED");
-          if (byteArray == null) return;
-          Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-          showToast("VOUCHER CREATED");
-          Log.e("PRINTER", "BITMAP CREATED");
-          try {
-            printerService.printJob(UUID.randomUUID().toString(), bitmap, printerServiceHelper.printerServiceListener);
-            showToast("PRINTING");
-            sendEvent("printDone", true);
-            if (callback != null) callback.invoke(true);
-          } catch (RemoteException e) {
-            e.printStackTrace();
-          }
-        } else {
-          if (callback != null) callback.invoke(false);
-          showToast("SERVICE NOT CONNECTED");
+    @ReactMethod
+    private void printSingleVoucherFromBooking(String domain_text, String user_text, String booking_string, String ticket_text, String voucher_text, boolean hidePrice, Callback callback) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            callback.invoke(false);
+            return;
         }
-      } else {
-        Log.e("PRINTER", "NOT CONNECTED");
-        printerServiceHelper.reconnectPrinter(printer);
-        if (callback != null) callback.invoke(false);
-        showToast("PRINTER NOT CONNECTED");
-      }
+
+        Bitmap ticket = PrinterHelper.createVoucherSingle(this.reactContext, domain_text, user_text, booking_string, ticket_text, voucher_text, hidePrice);
+        printBitmap(ticket, callback);
     }
-  }
 
-  // sends an event to javascript Realm (Object data)
-  private void sendEvent(String eventName,
-                         @Nullable WritableMap params) {
-    getReactApplicationContext()
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(eventName, params);
-  }
+    @ReactMethod
+    private void printSalesSummary(String tripBookingsReport_text, Callback callback) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            callback.invoke(false);
+            return;
+        }
 
-  // sends an event to javascript Realm (String data)
-  private void sendEvent(String eventName,
-                         @Nullable String s) {
-    getReactApplicationContext()
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(eventName, s);
-  }
+        Bitmap summary = PrinterHelper.createSalesSummaryTicket(this.reactContext, tripBookingsReport_text);
+        printBitmap(summary, callback);
+    }
 
-  // sends an event to javascript Realm (String data)
-  private void sendEvent(String eventName,
-                         @Nullable Boolean b) {
-    getReactApplicationContext()
-      .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-      .emit(eventName, b);
-  }
+    @ReactMethod
+    public void print(String filePath, Callback callback) {
+        if (printerServiceHelper == null) {
+            showToast("MAKE INIT BEFORE PRINT");
+            callback.invoke(false);
+            return;
+        }
 
-  private void showToast(String msg) {
-    final String strMsg = msg;
-    runOnUiThread(new Runnable() {
-      public void run() {
-        Toast.makeText(getReactApplicationContext(), strMsg, Toast.LENGTH_SHORT).show();
-      }
-    });
-  }
+        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+        printBitmap(bmp, callback);
+    }
+
+    @ReactMethod
+    public void pay(double amount, String currencyCode) {
+        Activity currentActivity = getCurrentActivity();
+
+        Payment payment = new Payment();
+        payment.setAmount((int) amount * 100);
+        payment.setCurrency(currencyCode);
+
+        Intent collectPaymentIntent = new Intent(Intents.ACTION_COLLECT_PAYMENT);
+        collectPaymentIntent.putExtra(Intents.INTENT_EXTRAS_PAYMENT, payment);
+        currentActivity.startActivityForResult(collectPaymentIntent, COLLECT_PAYMENT_REQUEST);
+    }
+
+    @Override
+    public void onHostResume() {
+        if (this.printerServiceHelper == null) return;
+        this.printerServiceHelper.bindAccessoryManager();
+    }
+
+    @Override
+    public void onHostPause() {
+        if (this.printerServiceHelper == null) return;
+        this.printerServiceHelper.unBindServices();
+    }
+
+    @Override
+    public void onHostDestroy() {
+        if (this.printerServiceHelper == null) return;
+        this.printerServiceHelper.unBindServices();
+        this.printerServiceHelper.unBindPrinters();
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+
+    }
+
+    @Override
+    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+        Gson gson = new Gson();
+
+        // Check which request we're responding to
+        if (requestCode == COLLECT_PAYMENT_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                if (data != null) {
+                    Payment payment = data.getParcelableExtra(Intents.INTENT_EXTRAS_PAYMENT);
+                    Log.d("POYNT", "Received onPaymentAction from PaymentFragment w/ Status(" + payment.getStatus() + ")");
+                    if (payment.getStatus().equals(PaymentStatus.COMPLETED)) {
+                        WritableMap params = Arguments.createMap();
+                        params.putString("transaction_id", payment.getTransactionId());
+                        params.putString("payment_method", payment.getActionLabel());
+                        params.putString("raw_data", gson.toJson(payment));
+                        sendEvent("paymentCompleted", params);
+                    } else if (payment.getStatus().equals(PaymentStatus.AUTHORIZED)) {
+                        sendEvent("paymentAuthorized", true);
+                    } else if (payment.getStatus().equals(PaymentStatus.CANCELED)) {
+                        sendEvent("paymentCanceled", true);
+                    } else if (payment.getStatus().equals(PaymentStatus.FAILED)) {
+                        sendEvent("paymentFailed", true);
+                    } else if (payment.getStatus().equals(PaymentStatus.REFUNDED)) {
+                        sendEvent("paymentRefunded", true);
+                    } else if (payment.getStatus().equals(PaymentStatus.VOIDED)) {
+                        sendEvent("paymentVoided", true);
+                    }
+                }
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                sendEvent("paymentCanceled", true);
+            }
+        }
+    }
+
+    //////////////////////////////////
+    // LOCAL PRIVATE METHODS
+    //////////////////////////////////
+    // print bitmap
+    private void printBitmap(Bitmap bmp, Callback callback) {
+        if (bmp == null) {
+            callback.invoke(false);
+            return;
+        }
+
+        Bundle data = new Bundle();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        bmp.recycle();
+
+        HashMap<AccessoryProvider, IBinder> printers = printerServiceHelper.getPrinters();
+        for (AccessoryProvider printer : printers.keySet()) {
+            if (printer.isConnected()) {
+                final IPoyntPrinterService printerService = IPoyntPrinterService.Stub.asInterface(printers.get(printer));
+                showToast("PRINTER CONNECTED");
+                if (printerService != null) {
+                    Log.e("PRINTER", "SERVICE CONNECTED");
+                    if (byteArray == null) return;
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+                    showToast("VOUCHER CREATED");
+                    Log.e("PRINTER", "BITMAP CREATED");
+                    try {
+                        printerService.printJob(UUID.randomUUID().toString(), bitmap, printerServiceHelper.printerServiceListener);
+                        showToast("PRINTING");
+                        sendEvent("printDone", true);
+                        if (callback != null) callback.invoke(true);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    if (callback != null) callback.invoke(false);
+                    showToast("SERVICE NOT CONNECTED");
+                }
+            } else {
+                Log.e("PRINTER", "NOT CONNECTED");
+                printerServiceHelper.reconnectPrinter(printer);
+                if (callback != null) callback.invoke(false);
+                showToast("PRINTER NOT CONNECTED");
+            }
+        }
+    }
+
+    // sends an event to javascript Realm (Object data)
+    private void sendEvent(String eventName,
+                           @Nullable WritableMap params) {
+        getReactApplicationContext()
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, params);
+    }
+
+    // sends an event to javascript Realm (String data)
+    private void sendEvent(String eventName,
+                           @Nullable String s) {
+        getReactApplicationContext()
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, s);
+    }
+
+    // sends an event to javascript Realm (String data)
+    private void sendEvent(String eventName,
+                           @Nullable Boolean b) {
+        getReactApplicationContext()
+                .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                .emit(eventName, b);
+    }
+
+    private void showToast(String msg) {
+        final String strMsg = msg;
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getReactApplicationContext(), strMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
 }
