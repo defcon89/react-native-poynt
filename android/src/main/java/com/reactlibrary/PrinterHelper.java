@@ -444,7 +444,7 @@ public class PrinterHelper {
         return frameLayout.getDrawingCache();
     }
 
-    public static Bitmap createSalesSummaryTicket(ReactApplicationContext context, String tripBookingsReport_text) {
+    public static Bitmap createSalesSummaryTicket(ReactApplicationContext context, String user_text, String tripBookingsReport_text) {
         double totalPrice = 0.0;
         double cashPrice = 0.0;
         double ccPrice = 0.0;
@@ -461,6 +461,7 @@ public class PrinterHelper {
         TextView totalSales = inflatedFrame.findViewById(R.id.total_sales);
         TextView cashSales = inflatedFrame.findViewById(R.id.cash_sales);
         TextView ccSales = inflatedFrame.findViewById(R.id.cc_sales);
+				TextView agent = inflatedFrame.findViewById(R.id.agent);
         TextView canceledOrders = inflatedFrame.findViewById(R.id.canceled_orders);
         TextView printedVouchers = inflatedFrame.findViewById(R.id.printed_voucher);
         View canceledOrdersLayout = inflatedFrame.findViewById(R.id.canceled_orders_layout);
@@ -469,6 +470,9 @@ public class PrinterHelper {
         Date timestampDate = new Date();
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ITALY);
         timestamp.setText(dateTimeFormat.format(timestampDate));
+
+				UserResponse userResponse = gson.fromJson(user_text, UserResponse.class);
+        agent.setText(userResponse.getUser().getAccess_id() + " " + userResponse.getUser().getName());
 
         String packageName = null;
         for (TripBookingReportViews order : tripBookings) {
