@@ -85,9 +85,9 @@ class Poynt {
   };
   
 
-  printSalesSummary = (tripBookingsReport_text, callback) => {
+  printSalesSummary = (tripBookingsReport_text, user_text, callback) => {
     this.printCallback = callback;
-    PoyntSDK.printSalesSummary(tripBookingsReport_text, callback);
+    PoyntSDK.printSalesSummary(tripBookingsReport_text, user_text, callback);
   }
 
   pay = (amount, currency, callback) => {

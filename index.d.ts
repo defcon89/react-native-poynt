@@ -48,6 +48,7 @@ declare class Poynt {
   //Print Sales Summary
   static printSalesSummary(
     tripBookingsReport_text: string,
+    user_text: string,
     callback?: (success: boolean) => void
   ): Promise<boolean>;
 
