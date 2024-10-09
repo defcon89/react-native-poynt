@@ -191,14 +191,14 @@ public class PoyntModule extends ReactContextBaseJavaModule implements Lifecycle
   }
 
   @ReactMethod
-  private void printSalesSummary(String tripBookingsReport_text, Callback callback) {
+  private void printSalesSummary(String tripBookingsReport_text, String user_text, Callback callback) {
     if (printerServiceHelper == null) {
       showToast("MAKE INIT BEFORE PRINT");
       callback.invoke(false);
       return;
     }
 
-    Bitmap summary = PrinterHelper.createSalesSummaryTicket(this.reactContext, tripBookingsReport_text);
+    Bitmap summary = PrinterHelper.createSalesSummaryTicket(this.reactContext, user_text, tripBookingsReport_text);
     printBitmap(summary, callback);
   }
 
